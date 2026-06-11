@@ -1,0 +1,29 @@
+import type { NextRequest } from 'next/server'
+import getDb from '@/lib/db'
+import { checkAdminPassword } from '@/lib/admin-auth'
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!checkAdminPassword(request)) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  try {
+    const { id } = await params
+    const db = getDb()
+    const result = db.prepare('DELETE FROM submissions WHERE id = ?').run(id)
+
+    if (result.changes === 0) {
+      return Response.json({ error: 'Submission not found' }, { status: 404 })
+    }
+
+    return new Response(null, { status: 204 })
+  } catch (error) {
+    return Response.json(
+      { error: 'Failed to delete submission', details: String(error) },
+      { status: 500 }
+    )
+  }
+}
