@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     const responses = result.rows as unknown as StudyResponse[]
 
     const headers = [
-      'id', 'participant_name', 'sparql_familiarity', 'cq_id',
+      'id', 'participant_name', 'sparql_familiarity', 'cq_id', 'cq_answer',
       'q1', 'q2', 'q3', 'q4', 'q5_comments',
       'started_at', 'submitted_at',
     ]
@@ -37,6 +37,7 @@ export async function GET(request: NextRequest) {
       r.participant_name,
       r.sparql_familiarity,
       r.cq_id,
+      r.cq_answer,
       r.q1, r.q2, r.q3, r.q4,
       r.q5_comments,
       formatDate(r.started_at),

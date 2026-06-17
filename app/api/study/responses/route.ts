@@ -9,6 +9,7 @@ export async function POST(request: Request) {
       participant_name,
       sparql_familiarity,
       cq_id,
+      cq_answer,
       q1, q2, q3, q4,
       q5_comments,
       started_at,
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
     // --------- basic validation ---------
     if (
       !participant_name?.trim() ||
-      !['none', 'basic', 'experienced'].includes(sparql_familiarity) ||
+      !['basic', 'experienced'].includes(sparql_familiarity) ||
       !cq_id?.trim() ||
       [q1, q2, q3, q4].some(v => !Number.isInteger(v) || v < 1 || v > 5)
     ) {
@@ -29,6 +30,7 @@ export async function POST(request: Request) {
       participant_name: participant_name.trim(),
       sparql_familiarity,
       cq_id,
+      cq_answer: cq_answer?.trim() || null,
       q1, q2, q3, q4,
       q5_comments: q5_comments?.trim() || null,
       started_at: Number(started_at) || Date.now(),
@@ -39,9 +41,9 @@ export async function POST(request: Request) {
     await db.execute({
       sql: `
         INSERT INTO study_responses
-          (id, participant_name, sparql_familiarity, cq_id, q1, q2, q3, q4, q5_comments, started_at, submitted_at)
+          (id, participant_name, sparql_familiarity, cq_id, cq_answer, q1, q2, q3, q4, q5_comments, started_at, submitted_at)
         VALUES
-          (@id, @participant_name, @sparql_familiarity, @cq_id, @q1, @q2, @q3, @q4, @q5_comments, @started_at, @submitted_at)
+          (@id, @participant_name, @sparql_familiarity, @cq_id, @cq_answer, @q1, @q2, @q3, @q4, @q5_comments, @started_at, @submitted_at)
       `,
       args: row as unknown as Record<string, string | number | null>,
     })

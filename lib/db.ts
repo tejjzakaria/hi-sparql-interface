@@ -29,6 +29,7 @@ async function init() {
       participant_name    TEXT NOT NULL,
       sparql_familiarity  TEXT NOT NULL,
       cq_id               TEXT NOT NULL,
+      cq_answer           TEXT,
       q1                  INTEGER NOT NULL,
       q2                  INTEGER NOT NULL,
       q3                  INTEGER NOT NULL,
@@ -38,6 +39,12 @@ async function init() {
       submitted_at        INTEGER NOT NULL
     )
   `)
+  // --------- migrate existing tables ---------
+  try {
+    await client.execute(`ALTER TABLE study_responses ADD COLUMN cq_answer TEXT`)
+  } catch {
+    // column already exists
+  }
   return client
 }
 
@@ -64,8 +71,9 @@ export type SubmissionRow = Omit<Submission, 'turtle_ttl' | 'form_data'>
 export interface StudyResponse {
   id: string
   participant_name: string
-  sparql_familiarity: 'none' | 'basic' | 'experienced'
+  sparql_familiarity: 'basic' | 'experienced'
   cq_id: string
+  cq_answer: string | null
   q1: number
   q2: number
   q3: number

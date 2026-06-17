@@ -17,7 +17,7 @@ import { CQ_QUERIES } from "@/lib/cq-queries"
 
 // --------- types ---------
 type Screen = "intro" | "task" | "questionnaire" | "done"
-type Familiarity = "none" | "basic" | "experienced"
+type Familiarity = "basic" | "experienced"
 
 // --------- cq hints ---------
 const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: string[] }> = {
@@ -218,6 +218,7 @@ export function StudySession() {
   const [familiarity, setFamiliarity] = useState<Familiarity | "">("")
   const [assignedCQKey, setAssignedCQKey] = useState<string>("")
   const [startedAt, setStartedAt] = useState<number>(0)
+  const [cqAnswer, setCqAnswer] = useState("")
   const [ratings, setRatings] = useState<Record<string, number | null>>({
     q1: null, q2: null, q3: null, q4: null,
   })
@@ -236,6 +237,10 @@ export function StudySession() {
 
   // --------- submit questionnaire ---------
   async function handleSubmit() {
+    if (!cqAnswer.trim()) {
+      toast.error("Please write your answer to the research question before submitting.")
+      return
+    }
     if (Object.values(ratings).some((v) => v === null)) {
       toast.error("Please rate all four statements before submitting.")
       return
@@ -249,6 +254,7 @@ export function StudySession() {
           participant_name: name.trim(),
           sparql_familiarity: familiarity,
           cq_id: assignedCQKey,
+          cq_answer: cqAnswer.trim(),
           q1: ratings.q1,
           q2: ratings.q2,
           q3: ratings.q3,
@@ -320,7 +326,6 @@ export function StudySession() {
                 spacing={1}
                 className="w-full justify-start"
               >
-                <ToggleGroupItem value="none" className="text-[13px] flex-1">None</ToggleGroupItem>
                 <ToggleGroupItem value="basic" className="text-[13px] flex-1">Basic</ToggleGroupItem>
                 <ToggleGroupItem value="experienced" className="text-[13px] flex-1">Experienced</ToggleGroupItem>
               </ToggleGroup>
@@ -525,6 +530,40 @@ export function StudySession() {
             <p className="text-[13px]" style={{ color: "var(--text-muted)" }}>
               Rate each statement from 1 (strongly disagree) to 5 (strongly agree).
             </p>
+          </div>
+
+          {/* --------- cq answer --------- */}
+          <div
+            className="flex flex-col gap-3 p-4 rounded-xl"
+            style={{ backgroundColor: "var(--surface)", border: "1px solid var(--border)" }}
+          >
+            <div className="flex flex-col gap-1">
+              <span
+                className="text-[11px] font-semibold uppercase tracking-wide"
+                style={{ color: "var(--primary)" }}
+              >
+                Your Research Question
+              </span>
+              <p className="text-[14px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                {cq?.title}
+              </p>
+              <p className="text-[12px] italic" style={{ color: "var(--text-muted)" }}>
+                &ldquo;{cq?.description}&rdquo;
+              </p>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="cq-answer" className="text-[13px]">
+                What is your answer to this question?{" "}
+                <span style={{ color: "var(--primary)" }}>*</span>
+              </Label>
+              <Textarea
+                id="cq-answer"
+                placeholder="Describe what you found using the interface…"
+                value={cqAnswer}
+                onChange={(e) => setCqAnswer(e.target.value)}
+                className="min-h-[120px]"
+              />
+            </div>
           </div>
 
           <Separator />
