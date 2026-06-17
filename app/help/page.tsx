@@ -26,7 +26,7 @@ const steps = [
   },
   {
     number: 3,
-    title: "Explore your results",
+    title: "Explore your Results",
     description:
       "Browse results with full provenance — each result tells you exactly why it matched your query and how it connects to the knowledge graph.",
   },
