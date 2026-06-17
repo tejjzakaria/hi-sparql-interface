@@ -27,12 +27,12 @@ export interface StoredQuery {
   shared: boolean
 }
 
-// --------- ttl files ---------
-const TTL_FILES = [
-  'Hybrid-Intelligence-Ontology/hi-ontology/hi-ontology.ttl',
-  'Hybrid-Intelligence-Ontology/hi-ontology/odd-extension.ttl',
-  'Hybrid-Intelligence-Ontology/case_study/hi-thesaurus.ttl',
-  'Hybrid-Intelligence-Ontology/case_study/scenarios_kgs.ttl',
+// --------- ttl contents at module level so bundlers trace the static paths ---------
+const TTL_CONTENTS = [
+  readFileSync(path.join(process.cwd(), 'Hybrid-Intelligence-Ontology/hi-ontology/hi-ontology.ttl'), 'utf-8'),
+  readFileSync(path.join(process.cwd(), 'Hybrid-Intelligence-Ontology/hi-ontology/odd-extension.ttl'), 'utf-8'),
+  readFileSync(path.join(process.cwd(), 'Hybrid-Intelligence-Ontology/case_study/hi-thesaurus.ttl'), 'utf-8'),
+  readFileSync(path.join(process.cwd(), 'Hybrid-Intelligence-Ontology/case_study/scenarios_kgs.ttl'), 'utf-8'),
 ]
 
 // --------- store singleton ---------
@@ -47,8 +47,7 @@ function getStore(): { store: Store; engine: QueryEngine } {
   if (!globalThis.__rdfStore) {
     const store = new Store()
     const parser = new Parser()
-    for (const file of TTL_FILES) {
-      const content = readFileSync(path.join(/*turbopackIgnore: true*/ process.cwd(), file), 'utf-8')
+    for (const content of TTL_CONTENTS) {
       store.addQuads(parser.parse(content))
     }
     globalThis.__rdfStore = store
