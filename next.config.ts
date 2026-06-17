@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  outputFileTracingIncludes: {
+    '/**': ['./Hybrid-Intelligence-Ontology/**/*.ttl'],
+  },
 };
 
 export default nextConfig;

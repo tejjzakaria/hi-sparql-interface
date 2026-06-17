@@ -9,13 +9,14 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const db = getDb()
-    const submissions = db.prepare(`
+    const db = await getDb()
+    const result = await db.execute(`
       SELECT id, title, submitter, status, turtle_ttl, created_at, reviewed_at
       FROM submissions
       WHERE status = 'pending'
       ORDER BY created_at DESC
-    `).all() as Omit<Submission, 'form_data'>[]
+    `)
+    const submissions = result.rows as unknown as Omit<Submission, 'form_data'>[]
 
     return Response.json({ submissions })
   } catch (error) {

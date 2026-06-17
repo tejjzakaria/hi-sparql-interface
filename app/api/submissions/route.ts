@@ -34,18 +34,14 @@ export async function POST(request: NextRequest) {
   }
 
   // --------- store ---------
-  const db = getDb()
-  db.prepare(`
-    INSERT INTO submissions (id, title, submitter, status, turtle_ttl, form_data, created_at)
-    VALUES (?, ?, ?, 'pending', ?, ?, ?)
-  `).run(
-    id,
-    formData.useCaseLabel.trim(),
-    submitter ?? null,
-    turtle,
-    JSON.stringify(formData),
-    Date.now()
-  )
+  const db = await getDb()
+  await db.execute({
+    sql: `
+      INSERT INTO submissions (id, title, submitter, status, turtle_ttl, form_data, created_at)
+      VALUES (?, ?, ?, 'pending', ?, ?, ?)
+    `,
+    args: [id, formData.useCaseLabel.trim(), submitter ?? null, turtle, JSON.stringify(formData), Date.now()],
+  })
 
   return Response.json({ id }, { status: 201 })
 }

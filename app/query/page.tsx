@@ -124,6 +124,20 @@ function QueryPageContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
+  // --------- auto-run cq from url param ---------
+  const autoRunDoneRef = useRef(false);
+  useEffect(() => {
+    const cqParam = searchParams.get("cq");
+    if (!cqParam || availableCQs.length === 0 || autoRunDoneRef.current) return;
+    const cqMeta = availableCQs.find((c) => c.name === cqParam);
+    if (!cqMeta) return;
+    autoRunDoneRef.current = true;
+    setSelectedCQ(cqMeta.name);
+    setShowCQPanel(true);
+    runCQ(cqMeta.name, undefined, undefined, cqMeta.title, null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, availableCQs]);
+
   // --------- autocomplete filter ---------
   useEffect(() => {
     if (!query.trim() || query.length < 2) {

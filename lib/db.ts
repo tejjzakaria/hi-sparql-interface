@@ -1,36 +1,52 @@
-import Database from 'better-sqlite3'
-import path from 'path'
+import { createClient } from '@libsql/client'
 
-// --------- sqlite singleton ---------
-const DB_PATH = path.join(process.cwd(), 'submissions.db')
-
+// --------- client singleton ---------
 declare global {
   // eslint-disable-next-line no-var
-  var __db: Database.Database | undefined
+  var __dbReady: Promise<ReturnType<typeof createClient>> | undefined
 }
 
-function getDb(): Database.Database {
-  if (!globalThis.__db) {
-    const db = new Database(DB_PATH)
-    db.pragma('journal_mode = WAL')
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS submissions (
-        id          TEXT PRIMARY KEY,
-        title       TEXT NOT NULL,
-        submitter   TEXT,
-        status      TEXT NOT NULL DEFAULT 'pending',
-        turtle_ttl  TEXT NOT NULL,
-        form_data   TEXT NOT NULL,
-        created_at  INTEGER NOT NULL,
-        reviewed_at INTEGER
-      )
-    `)
-    globalThis.__db = db
+async function init() {
+  const client = createClient({
+    url: process.env.TURSO_URL ?? 'file:submissions.db',
+    authToken: process.env.TURSO_AUTH_TOKEN,
+  })
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS submissions (
+      id          TEXT PRIMARY KEY,
+      title       TEXT NOT NULL,
+      submitter   TEXT,
+      status      TEXT NOT NULL DEFAULT 'pending',
+      turtle_ttl  TEXT NOT NULL,
+      form_data   TEXT NOT NULL,
+      created_at  INTEGER NOT NULL,
+      reviewed_at INTEGER
+    )
+  `)
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS study_responses (
+      id                  TEXT PRIMARY KEY,
+      participant_name    TEXT NOT NULL,
+      sparql_familiarity  TEXT NOT NULL,
+      cq_id               TEXT NOT NULL,
+      q1                  INTEGER NOT NULL,
+      q2                  INTEGER NOT NULL,
+      q3                  INTEGER NOT NULL,
+      q4                  INTEGER NOT NULL,
+      q5_comments         TEXT,
+      started_at          INTEGER NOT NULL,
+      submitted_at        INTEGER NOT NULL
+    )
+  `)
+  return client
+}
+
+export default function getDb(): Promise<ReturnType<typeof createClient>> {
+  if (!globalThis.__dbReady) {
+    globalThis.__dbReady = init()
   }
-  return globalThis.__db
+  return globalThis.__dbReady
 }
-
-export default getDb
 
 export interface Submission {
   id: string
@@ -44,3 +60,17 @@ export interface Submission {
 }
 
 export type SubmissionRow = Omit<Submission, 'turtle_ttl' | 'form_data'>
+
+export interface StudyResponse {
+  id: string
+  participant_name: string
+  sparql_familiarity: 'none' | 'basic' | 'experienced'
+  cq_id: string
+  q1: number
+  q2: number
+  q3: number
+  q4: number
+  q5_comments: string | null
+  started_at: number
+  submitted_at: number
+}

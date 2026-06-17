@@ -10,6 +10,8 @@
     "setup:graphdb": "node scripts/setup-graphdb.mjs"
   },
   "dependencies": {
+    "@comunica/query-sparql": "^5.2.3",
+    "@libsql/client": "^0.17.4",
     "@types/better-sqlite3": "^7.6.13",
     "@types/n3": "^1.26.1",
     "better-sqlite3": "^12.10.0",

@@ -12,10 +12,13 @@ export async function DELETE(
 
   try {
     const { id } = await params
-    const db = getDb()
-    const result = db.prepare('DELETE FROM submissions WHERE id = ?').run(id)
+    const db = await getDb()
+    const result = await db.execute({
+      sql: 'DELETE FROM submissions WHERE id = ?',
+      args: [id],
+    })
 
-    if (result.changes === 0) {
+    if (result.rowsAffected === 0) {
       return Response.json({ error: 'Submission not found' }, { status: 404 })
     }
 
