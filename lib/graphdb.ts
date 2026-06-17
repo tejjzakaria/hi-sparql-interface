@@ -29,10 +29,10 @@ export interface StoredQuery {
 
 // --------- ttl contents at module level so bundlers trace the static paths ---------
 const TTL_CONTENTS = [
-  readFileSync(path.join(process.cwd(), 'Hybrid-Intelligence-Ontology/hi-ontology/hi-ontology.ttl'), 'utf-8'),
-  readFileSync(path.join(process.cwd(), 'Hybrid-Intelligence-Ontology/hi-ontology/odd-extension.ttl'), 'utf-8'),
-  readFileSync(path.join(process.cwd(), 'Hybrid-Intelligence-Ontology/case_study/hi-thesaurus.ttl'), 'utf-8'),
-  readFileSync(path.join(process.cwd(), 'Hybrid-Intelligence-Ontology/case_study/scenarios_kgs.ttl'), 'utf-8'),
+  readFileSync(path.join(process.cwd(), 'data/hi-ontology.ttl'), 'utf-8'),
+  readFileSync(path.join(process.cwd(), 'data/odd-extension.ttl'), 'utf-8'),
+  readFileSync(path.join(process.cwd(), 'data/hi-thesaurus.ttl'), 'utf-8'),
+  readFileSync(path.join(process.cwd(), 'data/scenarios_kgs.ttl'), 'utf-8'),
 ]
 
 // --------- store singleton ---------

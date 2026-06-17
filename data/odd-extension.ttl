@@ -1,0 +1,847 @@
+@prefix odd:    <https://w3id.org/odd#> .
+@prefix hi:     <https://w3id.org/hi-ontology#> .
+@prefix time:   <http://www.w3.org/2006/time#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+
+##################################################
+# ONTOLOGY
+##################################################
+
+odd:ODD a owl:Ontology ;
+    owl:imports <http://www.w3.org/2006/time> ;
+    rdfs:label "Ontology for Dynamic Directives"@en ;
+    rdfs:comment "A modular ontology extending the Hybrid Intelligence ontology with a regulatory layer for representing dynamic, context-sensitive, epistemically informed, temporally constrained, and norm-bounded modulation of action selection and execution."@en ;
+    skos:definition "An ontology that formalises Dynamic Directives as regulatory constructs linked to Hybrid Intelligence entities such as agents, task executions, contexts, epistemic states, and temporal references, in order to represent activation conditions, normative qualifications, execution outcomes, and compliance assessments."@en .
+
+##################################################
+# CORE REGULATORY CLASSES
+##################################################
+
+odd:Directive a owl:Class ;
+    rdfs:label "Directive"@en ;
+    rdfs:comment "A regulatory construct that modulates the selection, prioritisation, performance, or suppression of an execution under specific conditions."@en ;
+    skos:definition "A context-sensitive regulatory entity that applies normative force to a task execution in a Hybrid Intelligence setting on the basis of contextual, epistemic, and temporal conditions."@en .
+
+odd:Condition a owl:Class ;
+    rdfs:label "Condition"@en ;
+    rdfs:comment "An abstract condition that contributes to the applicability of a directive."@en ;
+    skos:definition "A generic condition that must hold, or be evaluated as holding, for a directive to become active or relevant in a given situation."@en .
+
+odd:ContextCondition a owl:Class ;
+    rdfs:subClassOf odd:Condition ;
+    rdfs:label "Context Condition"@en ;
+    rdfs:comment "A condition grounded in environmental, social, situational, or task-related circumstances."@en ;
+    skos:definition "A condition that captures relevant contextual aspects of a Hybrid Intelligence scenario, such as user profile, role configuration, environmental risk, or interaction setting."@en .
+
+odd:EpistemicCondition a owl:Class ;
+    rdfs:subClassOf odd:Condition ;
+    rdfs:label "Epistemic Condition"@en ;
+    rdfs:comment "A condition concerning what an agent knows, assumes, believes, or is uncertain about."@en ;
+    skos:definition "A condition that constrains directive applicability in terms of knowledge, belief, informational asymmetry, or uncertainty held by one or more agents."@en .
+
+odd:TemporalCondition a owl:Class ;
+    rdfs:subClassOf odd:Condition ;
+    rdfs:label "Temporal Condition"@en ;
+    rdfs:comment "A condition constraining when, for how long, during which phase, or until which deadline a directive applies."@en ;
+    skos:definition "A condition that specifies the temporal applicability, persistence, ordering, phase-dependence, or expiry of a directive."@en .
+
+odd:EpistemicState a owl:Class ;
+    rdfs:label "Epistemic State"@en ;
+    rdfs:comment "A representation of the informational position of an agent with respect to relevant facts, propositions, or execution-related circumstances."@en ;
+    skos:definition "A state describing what an agent knows, assumes, believes, or does not know in relation to a regulated situation or execution."@en .
+
+odd:NormativeEffect a owl:Class ;
+    rdfs:label "Normative Effect"@en ;
+    rdfs:comment "A deontic effect expressing how a directive normatively qualifies a regulated execution."@en ;
+    skos:definition "The regulatory consequence associated with a directive, such as qualifying an execution as obligatory, permitted, or prohibited."@en .
+
+odd:ComplianceAssessment a owl:Class ;
+    rdfs:label "Compliance Assessment"@en ;
+    rdfs:comment "An evaluative entity representing whether a task execution conforms to the normative requirements of applicable directives."@en ;
+    skos:definition "An assessment that compares the normative qualification assigned by an active directive with the actual outcome of the regulated execution in order to determine compliance."@en .
+
+odd:Violation a owl:Class ;
+    rdfs:label "Violation"@en ;
+    rdfs:comment "A non-compliant regulatory outcome in which an execution breaches the requirements imposed by an applicable directive."@en ;
+    skos:definition "A detected breach of a directive arising when the realised outcome of a regulated execution conflicts with its normative qualification."@en .
+
+odd:Justification a owl:Class ;
+    rdfs:label "Justification"@en ;
+    rdfs:comment "An explanatory entity that records why a directive applied or why a compliance result was reached."@en ;
+    skos:definition "A traceability entity linking a directive, its activation conditions, and the resulting compliance or violation assessment in order to support explainability."@en .
+
+##################################################
+# TEMPORAL REFERENCE CLASSES
+##################################################
+
+odd:TemporalReference a owl:Class ;
+    rdfs:subClassOf time:TemporalEntity ;
+    rdfs:label "Temporal Reference"@en ;
+    rdfs:comment "A temporal entity used to specify when a directive applies, remains active, expires, or is evaluated."@en ;
+    skos:definition "A temporal reference grounds a temporal condition in an instant, interval, duration, phase, deadline, or ordering relation relevant to directive activation and compliance assessment."@en .
+
+odd:DirectiveInterval a owl:Class ;
+    rdfs:subClassOf odd:TemporalReference , time:Interval ;
+    rdfs:label "Directive Interval"@en ;
+    rdfs:comment "A temporal interval during which a directive is applicable, active, or assessable."@en ;
+    skos:definition "A time interval that specifies the period in which a directive may become active, remain valid, or be assessed."@en .
+
+odd:DirectiveInstant a owl:Class ;
+    rdfs:subClassOf odd:TemporalReference , time:Instant ;
+    rdfs:label "Directive Instant"@en ;
+    rdfs:comment "A temporal instant relevant to directive activation, expiry, triggering, or assessment."@en ;
+    skos:definition "A time instant used as a deadline, start point, end point, trigger point, or assessment point for a directive."@en .
+
+odd:ScenarioPhase a owl:Class ;
+    rdfs:subClassOf odd:TemporalReference ;
+    rdfs:label "Scenario Phase"@en ;
+    rdfs:comment "A named phase of a scenario or task process used as a temporal reference."@en ;
+    skos:definition "A temporal reference representing a meaningful phase in a Hybrid Intelligence scenario, such as preparation, execution, monitoring, intervention, human review, or post-assessment."@en .
+
+##################################################
+# DERIVED / CLASSIFICATION CLASSES
+##################################################
+
+odd:ActiveDirective a owl:Class ;
+    rdfs:subClassOf odd:Directive ;
+    rdfs:label "Active Directive"@en ;
+    rdfs:comment "A directive whose activation conditions are satisfied in the current situation."@en ;
+    skos:definition "A directive that is currently applicable because its required contextual, epistemic, and temporal conditions hold."@en .
+
+odd:OverriddenDirective a owl:Class ;
+    rdfs:subClassOf odd:Directive ;
+    rdfs:label "Overridden Directive"@en ;
+    rdfs:comment "A directive whose regulatory force has been suspended or superseded by another directive with higher priority or authority."@en ;
+    skos:definition "A directive that was applicable but whose normative effect has been overridden or deprioritised by a conflicting directive with greater precedence."@en .
+
+odd:RegulatedExecution a owl:Class ;
+    rdfs:subClassOf hi:TaskExecution ;
+    rdfs:label "Regulated Execution"@en ;
+    rdfs:comment "A task execution that is the target of at least one directive."@en ;
+    skos:definition "A task execution falling within the scope of regulatory assessment because it is explicitly constrained or qualified by a directive."@en .
+
+odd:ObligatoryExecution a owl:Class ;
+    rdfs:subClassOf odd:RegulatedExecution ;
+    rdfs:label "Obligatory Execution"@en ;
+    rdfs:comment "A regulated execution that is normatively qualified as obligatory under an applicable directive."@en ;
+    skos:definition "A regulated execution that ought to be performed because an active directive assigns it obligatory normative status."@en .
+
+odd:PermittedExecution a owl:Class ;
+    rdfs:subClassOf odd:RegulatedExecution ;
+    rdfs:label "Permitted Execution"@en ;
+    rdfs:comment "A regulated execution that is normatively qualified as permitted under an applicable directive."@en ;
+    skos:definition "A regulated execution that may be performed because an active directive assigns it permitted normative status."@en .
+
+odd:ProhibitedExecution a owl:Class ;
+    rdfs:subClassOf odd:RegulatedExecution ;
+    rdfs:label "Prohibited Execution"@en ;
+    rdfs:comment "A regulated execution that is normatively qualified as prohibited under an applicable directive."@en ;
+    skos:definition "A regulated execution that ought not to be performed because an active directive assigns it prohibited normative status."@en .
+
+odd:CompliantExecution a owl:Class ;
+    rdfs:subClassOf odd:RegulatedExecution ;
+    rdfs:label "Compliant Execution"@en ;
+    rdfs:comment "A regulated execution whose realised outcome conforms to the normative qualification imposed by an applicable directive."@en ;
+    skos:definition "A regulated execution assessed as normatively acceptable because its actual outcome is compatible with the status assigned by an active directive."@en .
+
+odd:NonCompliantExecution a owl:Class ;
+    rdfs:subClassOf odd:RegulatedExecution ;
+    rdfs:label "Non-Compliant Execution"@en ;
+    rdfs:comment "A regulated execution whose realised outcome conflicts with the normative qualification imposed by an applicable directive."@en ;
+    skos:definition "A regulated execution assessed as normatively unacceptable because its actual outcome is incompatible with the status assigned by an active directive."@en .
+
+odd:UnderdeterminedExecution a owl:Class ;
+    rdfs:subClassOf odd:RegulatedExecution ;
+    rdfs:label "Underdetermined Execution"@en ;
+    rdfs:comment "A regulated execution whose compliance status cannot be conclusively determined from available information."@en ;
+    skos:definition "A regulated execution assessed as underdetermined because contextual, epistemic, temporal, or outcome information is insufficient to determine whether it is compliant or non-compliant with an applicable directive."@en .
+
+##################################################
+# CONTROLLED STATUS CLASSES
+##################################################
+
+odd:NormativeStatus a owl:Class ;
+    rdfs:label "Normative Status"@en ;
+    rdfs:comment "A controlled category representing the deontic qualification assigned by a directive."@en ;
+    skos:definition "A classification value expressing whether a regulated execution is obligatory, permitted, or prohibited under a directive."@en .
+
+odd:ExecutionOutcome a owl:Class ;
+    rdfs:label "Execution Outcome"@en ;
+    rdfs:comment "A controlled category representing what actually happened to a task execution."@en ;
+    skos:definition "A classification value describing the realised operational outcome of a task execution, such as being performed, suppressed, attempted, or aborted."@en .
+
+odd:ComplianceStatus a owl:Class ;
+    rdfs:label "Compliance Status"@en ;
+    rdfs:comment "A controlled category representing the result of regulatory assessment."@en ;
+    skos:definition "A classification value stating whether the relation between a directive and an execution outcome is compliant, non-compliant, or underdetermined."@en .
+
+##################################################
+# NORMATIVE STATUS INDIVIDUALS
+##################################################
+
+odd:obligatory a odd:NormativeStatus ;
+    rdfs:label "obligatory"@en ;
+    rdfs:comment "Indicates that the regulated execution ought to be performed when the directive applies."@en ;
+    skos:definition "A normative status stating that a regulated execution is required under the conditions specified by an applicable directive."@en .
+
+odd:permitted a odd:NormativeStatus ;
+    rdfs:label "permitted"@en ;
+    rdfs:comment "Indicates that the regulated execution may be performed and is not forbidden when the directive applies."@en ;
+    skos:definition "A normative status stating that a regulated execution is allowed under the conditions specified by an applicable directive."@en .
+
+odd:prohibited a odd:NormativeStatus ;
+    rdfs:label "prohibited"@en ;
+    rdfs:comment "Indicates that the regulated execution ought not to be performed when the directive applies."@en ;
+    skos:definition "A normative status stating that a regulated execution is forbidden under the conditions specified by an applicable directive."@en .
+
+##################################################
+# EXECUTION OUTCOME INDIVIDUALS
+##################################################
+
+odd:performed a odd:ExecutionOutcome ;
+    rdfs:label "performed"@en ;
+    rdfs:comment "Indicates that the execution was actually carried out."@en ;
+    skos:definition "An execution outcome stating that the regulated task execution was realised in practice."@en .
+
+odd:suppressed a odd:ExecutionOutcome ;
+    rdfs:label "suppressed"@en ;
+    rdfs:comment "Indicates that the execution was deliberately withheld or not carried out."@en ;
+    skos:definition "An execution outcome stating that the regulated task execution was intentionally prevented, inhibited, or not selected for performance."@en .
+
+odd:attempted a odd:ExecutionOutcome ;
+    rdfs:label "attempted"@en ;
+    rdfs:comment "Indicates that the execution was initiated but not necessarily completed successfully."@en ;
+    skos:definition "An execution outcome stating that the regulated task execution was undertaken but may not have been fully realised."@en .
+
+odd:aborted a odd:ExecutionOutcome ;
+    rdfs:label "aborted"@en ;
+    rdfs:comment "Indicates that the execution was interrupted or terminated before completion."@en ;
+    skos:definition "An execution outcome stating that the regulated task execution was started or planned but then halted before successful completion."@en .
+
+##################################################
+# COMPLIANCE STATUS INDIVIDUALS
+##################################################
+
+odd:compliant a odd:ComplianceStatus ;
+    rdfs:label "compliant"@en ;
+    rdfs:comment "Indicates that the realised execution outcome is compatible with the directive's normative qualification."@en ;
+    skos:definition "A compliance status stating that the actual outcome of a regulated execution satisfies the requirements imposed by the applicable directive."@en .
+
+odd:nonCompliant a odd:ComplianceStatus ;
+    rdfs:label "non-compliant"@en ;
+    rdfs:comment "Indicates that the realised execution outcome conflicts with the directive's normative qualification."@en ;
+    skos:definition "A compliance status stating that the actual outcome of a regulated execution breaches the requirements imposed by the applicable directive."@en .
+
+odd:underdetermined a odd:ComplianceStatus ;
+    rdfs:label "underdetermined"@en ;
+    rdfs:comment "Indicates that compliance cannot yet be conclusively determined from the available information."@en ;
+    skos:definition "A compliance status stating that the available contextual, epistemic, temporal, or outcome information is insufficient to determine whether the execution is compliant or non-compliant."@en .
+
+##################################################
+# OBJECT PROPERTIES
+##################################################
+
+odd:regulatesExecution a owl:ObjectProperty ;
+    rdfs:label "regulates execution"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range hi:TaskExecution ;
+    rdfs:comment "Links a directive to the task execution whose performance, suppression, or prioritisation it regulates."@en ;
+    skos:definition "Relates a directive to the concrete task execution that is subject to its normative qualification."@en .
+
+odd:hasActivationCondition a owl:ObjectProperty ;
+    rdfs:label "has activation condition"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:Condition ;
+    rdfs:comment "Links a directive to a condition that contributes to its applicability."@en ;
+    skos:definition "Relates a directive to a condition that must hold, or be evaluated as holding, for the directive to become active."@en .
+
+odd:hasContextCondition a owl:ObjectProperty ;
+    rdfs:subPropertyOf odd:hasActivationCondition ;
+    rdfs:label "has context condition"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:ContextCondition ;
+    rdfs:comment "Links a directive to a reified contextual condition relevant to its activation."@en ;
+    skos:definition "Relates a directive to a first-class contextual condition instance that captures the situational or environmental configuration required for the directive to apply."@en .
+
+odd:hasEpistemicCondition a owl:ObjectProperty ;
+    rdfs:subPropertyOf odd:hasActivationCondition ;
+    rdfs:label "has epistemic condition"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:EpistemicCondition ;
+    rdfs:comment "Links a directive to a reified epistemic condition relevant to its activation."@en ;
+    skos:definition "Relates a directive to a first-class epistemic condition instance that captures the knowledge-related requirement needed for the directive to apply."@en .
+
+odd:hasTemporalCondition a owl:ObjectProperty ;
+    rdfs:subPropertyOf odd:hasActivationCondition ;
+    rdfs:label "has temporal condition"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:TemporalCondition ;
+    rdfs:comment "Links a directive to a reified temporal condition constraining when it applies."@en ;
+    skos:definition "Relates a directive to a first-class temporal condition instance that specifies the temporal applicability, persistence, sequencing, or expiry of the directive."@en .
+
+odd:refersToContext a owl:ObjectProperty ;
+    rdfs:label "refers to context"@en ;
+    rdfs:domain odd:ContextCondition ;
+    rdfs:range hi:Context ;
+    rdfs:comment "Links a contextual condition to the Hybrid Intelligence context it reifies or refers to."@en ;
+    skos:definition "Relates a reified contextual condition to the underlying HI context whose situational properties ground the condition."@en .
+
+odd:refersToEpistemicState a owl:ObjectProperty ;
+    rdfs:label "refers to epistemic state"@en ;
+    rdfs:domain odd:EpistemicCondition ;
+    rdfs:range odd:EpistemicState ;
+    rdfs:comment "Links an epistemic condition to the epistemic state it reifies or refers to."@en ;
+    skos:definition "Relates a reified epistemic condition to the underlying epistemic state representing the relevant knowledge, assumption, belief, or uncertainty."@en .
+
+odd:refersToTemporalReference a owl:ObjectProperty ;
+    rdfs:label "refers to temporal reference"@en ;
+    rdfs:domain odd:TemporalCondition ;
+    rdfs:range odd:TemporalReference ;
+    rdfs:comment "Links a temporal condition to the temporal entity, phase, interval, instant, deadline, or reference structure it depends on."@en ;
+    skos:definition "Relates a temporal condition to the temporal reference used to specify when a directive becomes applicable, remains active, or expires."@en .
+
+odd:hasApplicabilityInterval a owl:ObjectProperty ;
+    rdfs:subPropertyOf odd:refersToTemporalReference ;
+    rdfs:label "has applicability interval"@en ;
+    rdfs:domain odd:TemporalCondition ;
+    rdfs:range odd:DirectiveInterval ;
+    rdfs:comment "Links a temporal condition to the interval during which the directive may apply."@en ;
+    skos:definition "Relates a temporal condition to the time interval that bounds the applicability or validity of a directive."@en .
+
+odd:hasActivationInstant a owl:ObjectProperty ;
+    rdfs:subPropertyOf odd:refersToTemporalReference ;
+    rdfs:label "has activation instant"@en ;
+    rdfs:domain odd:TemporalCondition ;
+    rdfs:range odd:DirectiveInstant ;
+    rdfs:comment "Links a temporal condition to the instant at which a directive becomes applicable."@en ;
+    skos:definition "Relates a temporal condition to the instant that marks the activation point of a directive."@en .
+
+odd:hasExpiryInstant a owl:ObjectProperty ;
+    rdfs:subPropertyOf odd:refersToTemporalReference ;
+    rdfs:label "has expiry instant"@en ;
+    rdfs:domain odd:TemporalCondition ;
+    rdfs:range odd:DirectiveInstant ;
+    rdfs:comment "Links a temporal condition to the instant after which a directive no longer applies."@en ;
+    skos:definition "Relates a temporal condition to the instant that marks the expiry or termination point of a directive."@en .
+
+odd:appliesDuringPhase a owl:ObjectProperty ;
+    rdfs:subPropertyOf odd:refersToTemporalReference ;
+    rdfs:label "applies during phase"@en ;
+    rdfs:domain odd:TemporalCondition ;
+    rdfs:range odd:ScenarioPhase ;
+    rdfs:comment "Links a temporal condition to the scenario or task phase during which the directive applies."@en ;
+    skos:definition "Relates a temporal condition to a named scenario phase that constrains the applicability of a directive."@en .
+
+odd:hasCurrentTemporalReference a owl:ObjectProperty ;
+    rdfs:label "has current temporal reference"@en ;
+    rdfs:domain hi:TaskExecution ;
+    rdfs:range odd:TemporalReference ;
+    rdfs:comment "Links a task execution to the temporal reference that currently characterises or constrains the execution."@en ;
+    skos:definition "Relates a task execution to a current temporal entity, such as an interval, instant, phase, or deadline, used to evaluate whether a temporal condition is satisfied."@en .
+
+odd:hasNormativeStatus a owl:ObjectProperty ;
+    rdfs:label "has normative status"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:NormativeStatus ;
+    rdfs:comment "Associates a directive with the deontic qualification it assigns to the execution it regulates."@en ;
+    skos:definition "Relates a directive to the normative status, such as obligatory, permitted, or prohibited, that it imposes on its regulated execution."@en .
+
+odd:hasNormativeEffect a owl:ObjectProperty ;
+    rdfs:label "has normative effect"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:NormativeEffect ;
+    rdfs:comment "Links a directive to a reified representation of its deontic effect."@en ;
+    skos:definition "Relates a directive to an explicit normative effect entity used to represent its regulatory consequence in a more structured way."@en .
+
+odd:isKnownBy a owl:ObjectProperty ;
+    rdfs:label "is known by"@en ;
+    rdfs:domain odd:EpistemicState ;
+    rdfs:range hi:Agent ;
+    rdfs:comment "Links an epistemic state to the agent whose informational position it represents."@en ;
+    skos:definition "Relates an epistemic state to the agent that holds the represented knowledge, assumption, or belief."@en .
+
+odd:hasEpistemicContent a owl:ObjectProperty ;
+    rdfs:label "has epistemic content"@en ;
+    rdfs:domain odd:EpistemicState ;
+    rdfs:comment "Specifies the informational content of an epistemic state."@en ;
+    skos:definition "Relates an epistemic state to the fact, proposition, condition, or execution-related content that is known, assumed, believed, or uncertain."@en .
+
+odd:hasExecutionOutcome a owl:ObjectProperty ;
+    rdfs:label "has execution outcome"@en ;
+    rdfs:domain hi:TaskExecution ;
+    rdfs:range odd:ExecutionOutcome ;
+    rdfs:comment "Specifies what actually happened to a task execution."@en ;
+    skos:definition "Relates a task execution to its realised operational outcome, such as performed, suppressed, attempted, or aborted."@en .
+
+odd:appliesToExecution a owl:ObjectProperty ;
+    rdfs:label "applies to execution"@en ;
+    rdfs:domain odd:ComplianceAssessment ;
+    rdfs:range hi:TaskExecution ;
+    rdfs:comment "Links a compliance assessment to the task execution being evaluated."@en ;
+    skos:definition "Relates a compliance assessment to the concrete task execution whose regulatory acceptability is being determined."@en .
+
+odd:triggeredByDirective a owl:ObjectProperty ;
+    rdfs:label "triggered by directive"@en ;
+    rdfs:domain odd:ComplianceAssessment ;
+    rdfs:range odd:Directive ;
+    rdfs:comment "Identifies the directive that grounds the compliance assessment."@en ;
+    skos:definition "Relates a compliance assessment to the directive whose applicability motivates the assessment."@en .
+
+odd:hasComplianceStatus a owl:ObjectProperty ;
+    rdfs:label "has compliance status"@en ;
+    rdfs:domain odd:ComplianceAssessment ;
+    rdfs:range odd:ComplianceStatus ;
+    rdfs:comment "Associates a compliance assessment with its outcome."@en ;
+    skos:definition "Relates a compliance assessment to its resulting compliance status, such as compliant, non-compliant, or underdetermined."@en .
+
+odd:violatesDirective a owl:ObjectProperty ;
+    rdfs:label "violates directive"@en ;
+    rdfs:domain odd:Violation ;
+    rdfs:range odd:Directive ;
+    rdfs:comment "Links a violation to the directive whose requirement has been breached."@en ;
+    skos:definition "Relates a violation to the directive that was not satisfied by the realised execution outcome."@en .
+
+odd:concernsExecution a owl:ObjectProperty ;
+    rdfs:label "concerns execution"@en ;
+    rdfs:domain odd:Violation ;
+    rdfs:range hi:TaskExecution ;
+    rdfs:comment "Links a violation to the task execution involved in the breach."@en ;
+    skos:definition "Relates a violation to the task execution whose actual outcome conflicts with an applicable directive."@en .
+
+odd:hasJustification a owl:ObjectProperty ;
+    rdfs:label "has justification"@en ;
+    rdfs:domain odd:ComplianceAssessment ;
+    rdfs:range odd:Justification ;
+    rdfs:comment "Associates a compliance assessment with an explanatory justification."@en ;
+    skos:definition "Relates a compliance assessment to the traceability entity that records why the assessment holds."@en .
+
+odd:justifiesAssessment a owl:ObjectProperty ;
+    rdfs:label "justifies assessment"@en ;
+    rdfs:domain odd:Justification ;
+    rdfs:range odd:ComplianceAssessment ;
+    rdfs:comment "Links a justification to the compliance assessment it explains."@en ;
+    skos:definition "Relates a justification to the compliance assessment whose reasoning basis it records."@en .
+
+odd:refersToDirective a owl:ObjectProperty ;
+    rdfs:label "refers to directive"@en ;
+    rdfs:domain odd:Justification ;
+    rdfs:range odd:Directive ;
+    rdfs:comment "Links a justification to the directive involved in the assessment."@en ;
+    skos:definition "Relates a justification to the directive whose activation and normative force are part of the explanation."@en .
+
+odd:refersToCondition a owl:ObjectProperty ;
+    rdfs:label "refers to condition"@en ;
+    rdfs:domain odd:Justification ;
+    rdfs:range odd:Condition ;
+    rdfs:comment "Links a justification to a condition relevant to directive activation or assessment."@en ;
+    skos:definition "Relates a justification to one or more contextual, epistemic, or temporal conditions that explain why a directive applied."@en .
+
+odd:refersToExecution a owl:ObjectProperty ;
+    rdfs:label "refers to execution"@en ;
+    rdfs:domain odd:Justification ;
+    rdfs:range hi:TaskExecution ;
+    rdfs:comment "Links a justification to the execution whose outcome is being explained."@en ;
+    skos:definition "Relates a justification to the task execution whose realised outcome is evaluated in the compliance process."@en .
+
+odd:hasCurrentContextCondition a owl:ObjectProperty ;
+    rdfs:label "has current context condition"@en ;
+    rdfs:domain hi:TaskExecution ;
+    rdfs:range odd:ContextCondition ;
+    rdfs:comment "Links a task execution to the contextual condition instances currently relevant to its regulation."@en ;
+    skos:definition "Relates a task execution to the reified contextual conditions that are presently satisfied or applicable in the situation in which the execution is being regulated."@en .
+
+odd:hasCurrentEpistemicCondition a owl:ObjectProperty ;
+    rdfs:label "has current epistemic condition"@en ;
+    rdfs:domain hi:TaskExecution ;
+    rdfs:range odd:EpistemicCondition ;
+    rdfs:comment "Links a task execution to the epistemic condition instances currently relevant to its regulation."@en ;
+    skos:definition "Relates a task execution to the reified epistemic conditions that are presently satisfied with respect to the relevant agents' knowledge, assumptions, or uncertainty."@en .
+
+odd:hasCurrentTemporalCondition a owl:ObjectProperty ;
+    rdfs:label "has current temporal condition"@en ;
+    rdfs:domain hi:TaskExecution ;
+    rdfs:range odd:TemporalCondition ;
+    rdfs:comment "Links a task execution to the temporal condition instances currently constraining its regulation."@en ;
+    skos:definition "Relates a task execution to the reified temporal conditions that are presently satisfied and govern its activation, persistence, or expiry within a regulatory context."@en .
+
+odd:conflictsWithDirective a owl:ObjectProperty , owl:SymmetricProperty ;
+    rdfs:label "conflicts with directive"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:Directive ;
+    rdfs:comment "Identifies a symmetric conflict relationship between two directives whose normative effects are mutually incompatible."@en ;
+    skos:definition "Relates a directive to another directive with which it is in normative conflict, such that both cannot be simultaneously active without contradiction."@en .
+
+odd:hasHigherPriorityThan a owl:ObjectProperty ;
+    rdfs:label "has higher priority than"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:Directive ;
+    rdfs:comment "Establishes a priority ordering between directives, indicating which should be preferred in cases of conflict."@en ;
+    skos:definition "Relates a directive to another directive that it outranks in terms of priority, used for conflict resolution and directive activation ordering."@en .
+
+odd:overridesDirective a owl:ObjectProperty ;
+    rdfs:label "overrides directive"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:Directive ;
+    rdfs:comment "Indicates that one directive's normative force supersedes or suspends another directive's effect."@en ;
+    skos:definition "Relates a directive to another directive whose regulatory force it overrides, typically on the basis of priority, authority, or contextual precedence."@en .
+
+##################################################
+# DATA PROPERTIES
+##################################################
+
+odd:hasPriorityValue a owl:DatatypeProperty ;
+    rdfs:label "has priority value"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Associates a directive with a numeric priority value used to rank competing directives or feasible actions."@en ;
+    skos:definition "A datatype property specifying the relative priority of a directive for use in conflict resolution or action prioritisation."@en .
+
+odd:hasTraceText a owl:DatatypeProperty ;
+    rdfs:label "has trace text"@en ;
+    rdfs:domain odd:Justification ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Stores a textual explanation or trace associated with a justification."@en ;
+    skos:definition "A datatype property used to record a human-readable explanation of why a directive applied or why an execution was assessed in a certain way."@en .
+
+##################################################
+# OWL RULE-BASED INFERENCES
+##################################################
+
+##################################################
+# ACTIVATION MATCHING SHORTCUT PROPERTIES
+##################################################
+
+odd:isContextuallySatisfiedForExecution a owl:ObjectProperty ;
+    rdfs:label "is contextually satisfied for execution"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range hi:TaskExecution ;
+    owl:propertyChainAxiom (
+        odd:hasContextCondition
+        [ owl:inverseOf odd:hasCurrentContextCondition ]
+    ) ;
+    rdfs:comment "Relates a directive to an execution when the directive's contextual condition is also asserted as a current contextual condition of that execution."@en ;
+    skos:definition "A derived shortcut relation used to detect that a directive and an execution share the same contextual condition instance."@en .
+
+odd:isEpistemicallySatisfiedForExecution a owl:ObjectProperty ;
+    rdfs:label "is epistemically satisfied for execution"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range hi:TaskExecution ;
+    owl:propertyChainAxiom (
+        odd:hasEpistemicCondition
+        [ owl:inverseOf odd:hasCurrentEpistemicCondition ]
+    ) ;
+    rdfs:comment "Relates a directive to an execution when the directive's epistemic condition is also asserted as a current epistemic condition of that execution."@en ;
+    skos:definition "A derived shortcut relation used to detect that a directive and an execution share the same epistemic condition instance."@en .
+
+odd:isTemporallySatisfiedForExecution a owl:ObjectProperty ;
+    rdfs:label "is temporally satisfied for execution"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range hi:TaskExecution ;
+
+    owl:propertyChainAxiom (
+        odd:hasTemporalCondition
+        [ owl:inverseOf odd:hasCurrentTemporalCondition ]
+    ) ;
+
+    owl:propertyChainAxiom (
+        odd:hasTemporalCondition
+        odd:refersToTemporalReference
+        [ owl:inverseOf odd:hasCurrentTemporalReference ]
+    ) ;
+
+    rdfs:comment "Relates a directive to an execution when the directive's temporal condition is satisfied for that execution, either because they share the same temporal condition instance or because the directive condition and the execution refer to the same temporal reference."@en ;
+    skos:definition "A derived shortcut relation used to detect temporal satisfaction between a directive and an execution through shared temporal conditions or shared OWL-Time-based temporal references."@en .
+
+##################################################
+# DIRECTIVE ACTIVATION CLASSIFICATION
+##################################################
+
+odd:ActiveDirective owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+        odd:Directive
+        [
+            a owl:Restriction ;
+            owl:onProperty odd:regulatesExecution ;
+            owl:someValuesFrom hi:TaskExecution
+        ]
+        [
+            a owl:Restriction ;
+            owl:onProperty odd:isContextuallySatisfiedForExecution ;
+            owl:someValuesFrom hi:TaskExecution
+        ]
+        [
+            a owl:Restriction ;
+            owl:onProperty odd:isEpistemicallySatisfiedForExecution ;
+            owl:someValuesFrom hi:TaskExecution
+        ]
+        [
+            a owl:Restriction ;
+            owl:onProperty odd:isTemporallySatisfiedForExecution ;
+            owl:someValuesFrom hi:TaskExecution
+        ]
+    )
+] .
+
+##################################################
+# REGULATED AND NORMATIVELY CLASSIFIED EXECUTIONS
+##################################################
+
+odd:RegulatedExecution owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+        hi:TaskExecution
+        [
+            a owl:Restriction ;
+            owl:onProperty [ owl:inverseOf odd:regulatesExecution ] ;
+            owl:someValuesFrom odd:Directive
+        ]
+    )
+] .
+
+odd:ObligatoryExecution owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+        odd:RegulatedExecution
+        [
+            a owl:Restriction ;
+            owl:onProperty [ owl:inverseOf odd:regulatesExecution ] ;
+            owl:someValuesFrom [
+                a owl:Class ;
+                owl:intersectionOf (
+                    odd:ActiveDirective
+                    [
+                        a owl:Restriction ;
+                        owl:onProperty odd:hasNormativeStatus ;
+                        owl:hasValue odd:obligatory
+                    ]
+                )
+            ]
+        ]
+    )
+] .
+
+odd:PermittedExecution owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+        odd:RegulatedExecution
+        [
+            a owl:Restriction ;
+            owl:onProperty [ owl:inverseOf odd:regulatesExecution ] ;
+            owl:someValuesFrom [
+                a owl:Class ;
+                owl:intersectionOf (
+                    odd:ActiveDirective
+                    [
+                        a owl:Restriction ;
+                        owl:onProperty odd:hasNormativeStatus ;
+                        owl:hasValue odd:permitted
+                    ]
+                )
+            ]
+        ]
+    )
+] .
+
+odd:ProhibitedExecution owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+        odd:RegulatedExecution
+        [
+            a owl:Restriction ;
+            owl:onProperty [ owl:inverseOf odd:regulatesExecution ] ;
+            owl:someValuesFrom [
+                a owl:Class ;
+                owl:intersectionOf (
+                    odd:ActiveDirective
+                    [
+                        a owl:Restriction ;
+                        owl:onProperty odd:hasNormativeStatus ;
+                        owl:hasValue odd:prohibited
+                    ]
+                )
+            ]
+        ]
+    )
+] .
+
+##################################################
+# COMPLIANCE CLASSIFICATION AXIOMS
+##################################################
+
+odd:CompliantExecution owl:equivalentClass [
+    a owl:Class ;
+    owl:unionOf (
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:ProhibitedExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:suppressed
+                ]
+            )
+        ]
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:ObligatoryExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:performed
+                ]
+            )
+        ]
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:PermittedExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:performed
+                ]
+            )
+        ]
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:PermittedExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:suppressed
+                ]
+            )
+        ]
+    )
+] .
+
+odd:NonCompliantExecution owl:equivalentClass [
+    a owl:Class ;
+    owl:unionOf (
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:ProhibitedExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:performed
+                ]
+            )
+        ]
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:ProhibitedExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:attempted
+                ]
+            )
+        ]
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:ObligatoryExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:suppressed
+                ]
+            )
+        ]
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:ObligatoryExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:aborted
+                ]
+            )
+        ]
+    )
+] .
+
+odd:UnderdeterminedExecution owl:equivalentClass [
+    a owl:Class ;
+    owl:unionOf (
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:ObligatoryExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:attempted
+                ]
+            )
+        ]
+        [
+            a owl:Class ;
+            owl:intersectionOf (
+                odd:ProhibitedExecution
+                [
+                    a owl:Restriction ;
+                    owl:onProperty odd:hasExecutionOutcome ;
+                    owl:hasValue odd:aborted
+                ]
+            )
+        ]
+    )
+] .
+
+##################################################
+# CONFLICT AND OVERRIDE SUPPORT
+##################################################
+
+odd:CoRegulatingDirective a owl:Class ;
+    rdfs:subClassOf odd:Directive ;
+    rdfs:label "Co-Regulating Directive"@en ;
+    rdfs:comment "A directive that regulates an execution also regulated by another directive."@en ;
+    skos:definition "A directive participating in a shared regulatory situation, where more than one directive applies to the same task execution."@en .
+
+odd:coRegulatesWithDirective a owl:ObjectProperty , owl:SymmetricProperty ;
+    rdfs:label "co-regulates with directive"@en ;
+    rdfs:domain odd:Directive ;
+    rdfs:range odd:Directive ;
+    owl:propertyChainAxiom (
+        odd:regulatesExecution
+        [ owl:inverseOf odd:regulatesExecution ]
+    ) ;
+    rdfs:comment "Relates two directives that regulate the same execution. This shortcut is useful for detecting potential conflicts, but it does not by itself determine normative incompatibility."@en ;
+    skos:definition "A derived relation between directives that share at least one regulated execution."@en .
+
+odd:CoRegulatingDirective owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+        odd:Directive
+        [
+            a owl:Restriction ;
+            owl:onProperty odd:coRegulatesWithDirective ;
+            owl:someValuesFrom odd:Directive
+        ]
+    )
+] .
+
+odd:OverriddenDirective owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+        odd:Directive
+        [
+            a owl:Restriction ;
+            owl:onProperty [ owl:inverseOf odd:overridesDirective ] ;
+            owl:someValuesFrom odd:Directive
+        ]
+    )
+] .
