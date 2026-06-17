@@ -17,7 +17,7 @@ export const CQ_QUERIES: Record<string, CQDefinition> = {
     description: 'Given a use case, how is the hybrid intelligence team composed, and what roles do its agents assume?',
     paramName: 'useCase',
     paramCategory: 'Use Case',
-    defaultParam: 'https://w3id.org/hi-ontology/scenarios/1/UseCasePersonalAssistantHI',
+    defaultParam: 'https://w3id.org/hi-thesaurus/PersonalAssistantUseCase',
     buildQuery: (useCase) => `
 PREFIX hi:   <https://w3id.org/hi-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -25,8 +25,9 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 SELECT DISTINCT ?agentType ?agentTypeLabel ?roleConcept ?roleLabel ?roleDefinition
 WHERE {
-  VALUES ?useCase { <${useCase ?? 'https://w3id.org/hi-ontology/scenarios/1/UseCasePersonalAssistantHI'}> }
-  ?useCase hi:hasHITeam ?team .
+  VALUES ?useCaseConcept { <${useCase ?? 'https://w3id.org/hi-thesaurus/PersonalAssistantUseCase'}> }
+  ?useCase hi:hasUseCaseConcept ?useCaseConcept ;
+      hi:hasHITeam ?team .
   ?team hi:hasMember ?member .
   ?member a ?agentType ;
       hi:hasRoleConcept ?roleConcept .
@@ -280,15 +281,16 @@ WHERE {
     description: 'Given a use case, which contextual phenomena are associated with it?',
     paramName: 'useCase',
     paramCategory: 'Use Case',
-    defaultParam: 'https://w3id.org/hi-ontology/scenarios/6/UseCaseCampusEnergyNegotiation',
+    defaultParam: 'https://w3id.org/hi-thesaurus/EnergyNegotiationUseCase',
     buildQuery: (useCase) => `
 PREFIX hi:   <https://w3id.org/hi-ontology#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 SELECT DISTINCT ?phenomenonConcept ?phenomenonLabel ?phenomenonDefinition
 WHERE {
-  VALUES ?useCase { <${useCase ?? 'https://w3id.org/hi-ontology/scenarios/6/UseCaseCampusEnergyNegotiation'}> }
-  ?useCase hi:hasHITeam ?team .
+  VALUES ?useCaseConcept { <${useCase ?? 'https://w3id.org/hi-thesaurus/EnergyNegotiationUseCase'}> }
+  ?useCase hi:hasUseCaseConcept ?useCaseConcept ;
+      hi:hasHITeam ?team .
   ?context hi:hasInfluenceOn ?team ;
       hi:hasPhenomenonConcept ?phenomenonConcept .
   ?phenomenonConcept skos:prefLabel ?phenomenonLabel ;

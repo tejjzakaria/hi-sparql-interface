@@ -216,6 +216,11 @@ function QueryPageContent() {
     }
   }
 
+  function pickCQ(cqNames: string[]): string {
+    if (selectedCQ && cqNames.includes(selectedCQ)) return selectedCQ;
+    return cqNames[0];
+  }
+
   function executeTextQuery(text: string) {
     const matched = matchTermToQuery(text);
 
@@ -246,8 +251,9 @@ function QueryPageContent() {
       return;
     }
 
-    const cqMeta = availableCQs.find((c) => c.name === cqNames[0]);
-    runCQ(cqNames[0], matched.uri, cqMeta?.paramName ?? null, text, matched.label);
+    const chosen = pickCQ(cqNames);
+    const cqMeta = availableCQs.find((c) => c.name === chosen);
+    runCQ(chosen, matched.uri, cqMeta?.paramName ?? null, text, matched.label);
   }
 
   function handleRunQuery() {
@@ -269,8 +275,9 @@ function QueryPageContent() {
       setIsLoading(false);
       return;
     }
-    const cqMeta = availableCQs.find((c) => c.name === cqNames[0]);
-    runCQ(cqNames[0], term.uri, cqMeta?.paramName ?? null, term.label, term.label);
+    const chosen = pickCQ(cqNames);
+    const cqMeta = availableCQs.find((c) => c.name === chosen);
+    runCQ(chosen, term.uri, cqMeta?.paramName ?? null, term.label, term.label);
   }
 
   function handleClear() {

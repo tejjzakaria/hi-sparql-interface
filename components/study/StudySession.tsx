@@ -120,12 +120,12 @@ const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: str
       "Wait for the autocomplete dropdown, then click the matching suggestion",
       "Results show phenomena such as trust shifts, sensor noise, and group-thinking dynamics",
     ],
-    searchTip: "Type the use case name as written below (e.g. \"Campus Energy Negotiation Use Case\"). Autocomplete appears after a few characters — click the suggestion to run the query.",
+    searchTip: "Type the use case name as written below (e.g. \"Energy Negotiation Use Case\"). Autocomplete appears after a few characters — click the suggestion to run the query.",
     examples: [
       "Personal Assistant Use Case",
-      "Medical Diagnosis Use Case",
-      "Campus Energy Negotiation Use Case",
       "Autonomous Tutoring Use Case",
+      "Energy Negotiation Use Case",
+      "Group Deliberation Use Case",
     ],
   },
 }
