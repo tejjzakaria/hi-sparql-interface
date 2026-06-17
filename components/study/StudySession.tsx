@@ -19,17 +19,28 @@ import { CQ_QUERIES } from "@/lib/cq-queries"
 type Screen = "intro" | "task" | "questionnaire" | "done"
 type Familiarity = "basic" | "experienced"
 
+// --------- study cq pool (6 easiest) ---------
+const STUDY_CQ_KEYS = [
+  "cq1-team-composition",
+  "cq5-interactions",
+  "cq6-method-goals",
+  "cq7-metric-tasks",
+  "cq9-constraint-cases",
+  "cq11-phenomena",
+]
+
 // --------- cq hints ---------
-const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: string[] }> = {
+const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: string[]; searchTip?: string }> = {
   "cq1-team-composition": {
     context:
       "You're exploring how a human–AI team is composed for a specific use case — who the agents are and what roles they play.",
     steps: [
       "A default example is already loaded on the right — read through the results",
-      "To explore another use case, type one of the example terms below in the search bar",
-      "Select the matching concept from the autocomplete dropdown",
+      "To explore another use case, type one of the example terms in the search bar",
+      "Wait for the autocomplete dropdown, then click the matching suggestion",
       "Result cards show agent types, roles, and role definitions",
     ],
+    searchTip: "Type the use case name as written below (e.g. \"Medical Diagnosis Use Case\"). Autocomplete appears after a few characters — click the suggestion that appears to run the query.",
     examples: [
       "Personal Assistant Use Case",
       "Medical Diagnosis Use Case",
@@ -37,46 +48,16 @@ const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: str
       "Energy Negotiation Use Case",
     ],
   },
-  "cq2-agent-tasks": {
-    context:
-      "You're exploring which tasks an agent can perform based on its capabilities, and which use cases it can participate in.",
-    steps: [
-      "A default example is already loaded — read through the results",
-      "To explore another capability, type one of the example terms below in the search bar",
-      "Select the capability from the autocomplete dropdown",
-      "Results show which tasks that capability enables and which use cases include it",
-    ],
-    examples: [
-      "Bayesian reasoning capability",
-      "Clinical judgment capability",
-      "Knowledge graph querying capability",
-      "Explaining capability",
-    ],
-  },
-  "cq3-team-eligibility": {
-    context:
-      "You're checking which team compositions satisfy all capability requirements for achieving a given goal.",
-    steps: [
-      "A default example is already loaded — read through the results",
-      "To explore another goal, type one of the example terms below in the search bar",
-      "Select the goal from the autocomplete dropdown",
-      "Results show teams and agents that collectively cover all required capabilities",
-    ],
-    examples: [
-      "Fair and Accurate Verdict Goal",
-      "Effective Learning Goal",
-      "Enhanced Visitor Goal",
-      "User Wellbeing Goal",
-    ],
-  },
   "cq5-interactions": {
     context:
       "You're exploring what types of interactions occur between agents during task execution across all scenarios.",
     steps: [
       "The query has already been run — results are shown on the right",
-      "Browse the interaction types, intents (e.g. explanation, negotiation), and modalities (e.g. verbal dialogue, text chat)",
+      "Browse the interaction intents (e.g. explanation, negotiation) and modalities (e.g. verbal dialogue, text chat)",
       "Use the filter bar above the results to narrow down by keyword",
+      "Note the different interaction types and which agents are involved",
     ],
+    searchTip: "No search is needed for this question — all interactions are already loaded. Use the filter bar on the right to focus on a specific intent or modality.",
     examples: [],
   },
   "cq6-method-goals": {
@@ -84,10 +65,11 @@ const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: str
       "You're exploring which goals and tasks a specific computational method contributes to.",
     steps: [
       "A default example is already loaded — read through the results",
-      "To explore another method, type one of the example terms below in the search bar",
-      "Select the method from the autocomplete dropdown",
-      "Results show which goals and tasks can be achieved with that method",
+      "To explore another method, type one of the example terms in the search bar",
+      "Wait for the autocomplete dropdown, then click the matching suggestion",
+      "Results show the goals and tasks achievable with that method",
     ],
+    searchTip: "Type the method name as written below (e.g. \"Semantic Linking Method\"). Autocomplete appears after a few characters — click the suggestion to run the query.",
     examples: [
       "Semantic Linking Method",
       "Reinforcement Learning Method",
@@ -100,10 +82,11 @@ const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: str
       "You're exploring which tasks can be assessed using a given evaluation metric.",
     steps: [
       "A default example is already loaded — read through the results",
-      "To explore another metric, type one of the example terms below in the search bar",
-      "Select the metric from the autocomplete dropdown",
-      "Results show which tasks are evaluated by that metric",
+      "To explore another metric, type one of the example terms in the search bar",
+      "Wait for the autocomplete dropdown, then click the matching suggestion",
+      "Results show the tasks evaluated by that metric",
     ],
+    searchTip: "Type the metric name as written below (e.g. \"Fair Outcome Metric\"). Autocomplete appears after a few characters — click the suggestion to run the query.",
     examples: [
       "Fair Outcome Metric",
       "Diagnosis Accuracy Metric",
@@ -111,25 +94,16 @@ const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: str
       "Explanation Clarity Metric",
     ],
   },
-  "cq8-goal-experiments": {
-    context:
-      "You're exploring which experiments and metrics are associated with a goal, including the hypotheses they address.",
-    steps: [
-      "The query has already been run with a default goal — results are shown on the right",
-      "Browse the experiments, their metrics, and the null and alternative hypotheses",
-      "Use the filter bar to search within results",
-    ],
-    examples: [],
-  },
   "cq9-constraint-cases": {
     context:
       "You're exploring which use cases are affected by a given contextual constraint, and how it shapes the team.",
     steps: [
       "A default example is already loaded — read through the results",
-      "To explore another constraint, type one of the example terms below in the search bar",
-      "Select the constraint from the autocomplete dropdown",
+      "To explore another constraint, type one of the example terms in the search bar",
+      "Wait for the autocomplete dropdown, then click the matching suggestion",
       "Results show affected use cases, team members, and the roles operating under that constraint",
     ],
+    searchTip: "Type the constraint name as written below (e.g. \"Privacy Constraint\"). Autocomplete appears after a few characters — click the suggestion to run the query.",
     examples: [
       "Privacy Constraint",
       "Safety Constraint",
@@ -137,25 +111,22 @@ const CQ_HINTS: Record<string, { context: string; steps: string[]; examples: str
       "Fairness Constraint",
     ],
   },
-  "cq10-shared-constraints": {
-    context:
-      "You're looking for constraints that appear across multiple use cases and which roles they affect.",
-    steps: [
-      "The query has already been run — results are shown on the right",
-      "Browse which constraints are shared across different use cases",
-      "Use the filter bar to search within results by constraint name or role",
-    ],
-    examples: [],
-  },
   "cq11-phenomena": {
     context:
       "You're exploring what contextual phenomena (e.g. trust shifts, knowledge mismatches) are associated with a specific use case.",
     steps: [
-      "The query has already been run with a default use case — results are shown on the right",
-      "Browse the contextual phenomena such as trust shifts, sensor noise, and group-thinking dynamics",
-      "Use the filter bar to search within results",
+      "A default example is already loaded — read through the results",
+      "To explore another use case, type one of the example terms in the search bar",
+      "Wait for the autocomplete dropdown, then click the matching suggestion",
+      "Results show phenomena such as trust shifts, sensor noise, and group-thinking dynamics",
     ],
-    examples: [],
+    searchTip: "Type the use case name as written below (e.g. \"Campus Energy Negotiation Use Case\"). Autocomplete appears after a few characters — click the suggestion to run the query.",
+    examples: [
+      "Personal Assistant Use Case",
+      "Medical Diagnosis Use Case",
+      "Campus Energy Negotiation Use Case",
+      "Autonomous Tutoring Use Case",
+    ],
   },
 }
 
@@ -228,8 +199,7 @@ export function StudySession() {
   // --------- start session ---------
   function handleStart() {
     if (!name.trim() || !familiarity) return
-    const keys = Object.keys(CQ_QUERIES)
-    const picked = keys[Math.floor(Math.random() * keys.length)]
+    const picked = STUDY_CQ_KEYS[Math.floor(Math.random() * STUDY_CQ_KEYS.length)]
     setAssignedCQKey(picked)
     setStartedAt(Date.now())
     setScreen("task")
@@ -456,16 +426,32 @@ export function StudySession() {
               </ol>
             </div>
 
+            <Separator />
+
+            {/* --------- search tip --------- */}
+            {hints.searchTip && (
+              <div
+                className="flex flex-col gap-1.5 p-3 rounded-lg"
+                style={{ backgroundColor: "color-mix(in srgb, var(--primary) 8%, transparent)", border: "1px solid color-mix(in srgb, var(--primary) 20%, transparent)" }}
+              >
+                <div className="flex items-center gap-1.5">
+                  <FiSearch size={12} style={{ color: "var(--primary)" }} />
+                  <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: "var(--primary)" }}>
+                    How to search
+                  </span>
+                </div>
+                <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-primary)" }}>
+                  {hints.searchTip}
+                </p>
+              </div>
+            )}
+
             {hints.examples.length > 0 && (
               <>
-                <Separator />
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-1.5">
-                    <FiSearch size={12} style={{ color: "var(--primary)" }} />
-                    <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: "var(--primary)" }}>
-                      Try searching for
-                    </span>
-                  </div>
+                  <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+                    Example search terms
+                  </span>
                   <div className="flex flex-wrap gap-1.5">
                     {hints.examples.map((ex) => (
                       <Badge
@@ -478,9 +464,6 @@ export function StudySession() {
                       </Badge>
                     ))}
                   </div>
-                  <p className="text-[11px]" style={{ color: "var(--text-muted)" }}>
-                    Type any of these exactly in the search bar on the right.
-                  </p>
                 </div>
               </>
             )}
